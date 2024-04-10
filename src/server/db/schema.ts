@@ -4,8 +4,10 @@
 import { sql } from "drizzle-orm";
 import {
   index,
+  integer,
   pgTableCreator,
   serial,
+  text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -18,11 +20,18 @@ import {
  */
 export const createTable = pgTableCreator((name) => `hg_${name}`);
 
-export const posts = createTable(
-  "post",
+const users = ["Dirk", "Jezabel", "Julian"] as const;
+export const PayedByOptions = [...users, "Jezabel und Julian"] as const;
+export type PayedByOptionsType = (typeof PayedByOptions)[number];
+
+export const payments = createTable(
+  "payment",
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
+    price: integer("price"),
+    payedBy: text("payed_by", { enum: PayedByOptions }),
+    usedBy: varchar("used_by", { length: 256 }),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -30,5 +39,5 @@ export const posts = createTable(
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
-  })
+  }),
 );
