@@ -11,16 +11,16 @@ import {
   SelectGroup,
 } from "~/components/ui/select";
 import { api } from "~/trpc/react";
-import { PayedByOptions, PayedByOptionsType } from "~/server/db/schema";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { ComboboxMulti } from "./combobox_multi";
 
 export function PaymentFrom() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [payedBy, setPayedBy] = useState<PayedByOptionsType>("Dirk");
-  const createPayment = api.payment.create.useMutation({
+  const [payedBy, setPayedBy] = useState<string[]>([]);
+  const createPayment = api.spending.create.useMutation({
     onSuccess: () => {
       router.push("/");
     },
@@ -36,12 +36,12 @@ export function PaymentFrom() {
         createPayment.mutate({
           name,
           price: Math.round(Number(price.replace(",", "."))) * 100,
-          payedBy,
+          // payedBy,
         });
       }}
     >
       <Input
-        placeholder="name"
+        placeholder="Bezeichnung"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
@@ -50,7 +50,9 @@ export function PaymentFrom() {
         value={price}
         onChange={(e) => setPrice(e.target.value)}
       />
-      <Select>
+      <Input placeholder="Wer hat bezahlt?" />
+      <ComboboxMulti />
+      {/* <Select>
         <SelectTrigger className=" relative w-32">
           <SelectValue placeholder="Wer hat bezahlt?" />
         </SelectTrigger>
@@ -60,7 +62,7 @@ export function PaymentFrom() {
           <SelectItem value="Jezabel">Jezabel</SelectItem>
           <SelectItem value="Julian">Julian</SelectItem>
         </SelectContent>
-      </Select>
+      </Select> */}
       <Button type="submit">Hinzufügen</Button>
     </form>
   );

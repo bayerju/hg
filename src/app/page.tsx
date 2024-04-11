@@ -5,7 +5,7 @@ import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/server";
 
 export default async function Home() {
-  const payments = await api.payment.getAll();
+  const payments = await api.spending.getAll();
   return (
     <main className="flex min-h-screen flex-col items-center ">
       <h1 className=" text-lg font-semibold">last payments</h1>
