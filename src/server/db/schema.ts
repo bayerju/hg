@@ -43,8 +43,18 @@ export const spendings = createTable(
 );
 
 export const spendingsRelations = relations(spendings, ({ many }) => ({
-  usersAffected: many(usersToSpendingsAffected, { relationName: "spendings_user" }),
-  usersPayed: many(usersToSpendingsPayed, { relationName: "spendings_user" }),
+  usersAffected: many(
+    usersToSpendingsAffected,
+    // {
+    // relationName: "user_to_spending_affected",
+    // }
+  ),
+  usersPayed: many(
+    usersToSpendingsPayed,
+    // {
+    // relationName: "user_to_spending_payed",
+    // }
+  ),
   // distributedBetween: many(users, {
   //   relationName: "distributed_spendings_users",
   // }),
@@ -62,8 +72,18 @@ export const users = createTable("user", {
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
-  spendingsAffected: many(usersToSpendingsAffected, { relationName: "spendings_user" }), // spendings that you made
-  spendingsPayed: many(usersToSpendingsPayed, { relationName: "spendings_user" }), // spendings that you payed
+  spendingsAffected: many(
+    usersToSpendingsAffected,
+    // {
+    // relationName: "user_to_spending_affected",
+    // }
+  ), // spendings that you made
+  spendingsPayed: many(
+    usersToSpendingsPayed,
+    //   {
+    //   relationName: "user_to_spending_payed",
+    // }
+  ), // spendings that you payed
   // distributedBetween: many(spendings, {
   //   relationName: "distributed_spendings_users",
   // }), // spendings that you participated in
@@ -81,21 +101,24 @@ export const usersToSpendingsAffected = createTable(
     amount: integer("amount").notNull(),
   },
   (table) => {
-    return {pk: primaryKey({columns: [table.userId, table.spendingId]})}
-  }
+    return { pk: primaryKey({ columns: [table.userId, table.spendingId] }) };
+  },
 );
 
-export const usersToSpendingsAffectedRelations = relations(usersToSpendingsAffected, ({ one }) => ({
-  user: one(users, {
-    fields: [usersToSpendingsAffected.userId],
-    references: [users.id]
-    
+export const usersToSpendingsAffectedRelations = relations(
+  usersToSpendingsAffected,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [usersToSpendingsAffected.userId],
+      references: [users.id],
+      // relationName: "user_to_spending_affected",
+    }),
+    spending: one(spendings, {
+      fields: [usersToSpendingsAffected.spendingId],
+      references: [spendings.id],
+    }),
   }),
-  spending: one(spendings, {
-    fields: [usersToSpendingsAffected.spendingId],
-    references: [spendings.id]
-  }),
-}));
+);
 
 
 export const usersToSpendingsPayed = createTable(
