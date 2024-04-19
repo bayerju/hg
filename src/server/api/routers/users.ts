@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
+import { seed } from "~/server/db/seed";
 
 export const usersRouter = createTRPCRouter({
   findByUsername: publicProcedure
@@ -9,9 +10,10 @@ export const usersRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      return ctx.db.query.users.findMany({
-        where: (users, op) => op.ilike(users.username, input.username),
+      const users = await ctx.db.query.users.findMany({
+        where: (users, op) => op.ilike(users.username, `${input.username}%`),
         limit: 10,
       });
+      return users;
     }),
 });

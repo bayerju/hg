@@ -18,6 +18,8 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { api } from "~/trpc/react";
+import { Input } from "~/components/ui/input";
+import { Badge } from "~/components/ui/badge";
 
 const frameworks = [
   {
@@ -41,57 +43,95 @@ const frameworks = [
     label: "Astro",
   },
 ];
+export interface SimpleUser {
+  username: string;
+  id: number;
+  clerkId: string;
+}
 
-export function ComboboxMulti() {
+export function SearchUsers(props: {
+  placeholder: string;
+  selectedUsers: SimpleUser[];
+  setSelectedUsers: (
+    users: SimpleUser[] | ((users: SimpleUser[]) => SimpleUser[]),
+  ) => void;
+}) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
   const [searchUsername, setSearchUsername] = React.useState("");
   const users = api.user.findByUsername.useQuery(
     { username: searchUsername },
     { enabled: searchUsername.length > 0 },
   );
 
+  const { selectedUsers, setSelectedUsers, placeholder } = props;
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between"
-        >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search users..." />
-          <CommandEmpty>No users found.</CommandEmpty>
-          <CommandGroup>
-            {users.data?.map((iUser) => (
-              <CommandItem
-                key={iUser.username}
-                value={iUser.username}
-                onSelect={(currentValue: string) => {
-                  setValue(currentValue === value ? "" : currentValue);
-                  setOpen(false);
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === iUser.username ? "opacity-100" : "opacity-0",
-                  )}
-                />
-                {iUser.username}
-              </CommandItem>
+    <div>
+      <div className="pb-2">
+        {selectedUsers.length > 0 &&
+          selectedUsers.map((iUser) => (
+            <button
+              value={iUser.id}
+              onClick={(e) => {
+                const value = e.currentTarget.value;
+                setSelectedUsers((prev) =>
+                  prev.filter((iUser) => iUser.id.toString() != value),
+                );
+              }}
+            >
+              <Badge variant={"secondary"}>{iUser.username}</Badge>
+            </button>
+          ))}
+      </div>
+      <Input
+        className=""
+        value={searchUsername}
+        placeholder={placeholder}
+        onChange={(e) => setSearchUsername(e.target.value)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+      />
+
+      <ul
+        className={
+          users.data && users.data.length >= 1
+            ? cn(
+                "z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+                { hidden: !open && searchUsername.length >= 0 },
+                "absolute",
+              )
+            : "hidden"
+        }
+      >
+        {users.data &&
+          users.data.length >= 1 &&
+          users.data
+            .filter(
+              (iUser) =>
+                !selectedUsers.find(
+                  (iSelectedUser) => iUser.id === iSelectedUser.id,
+                ),
+            )
+            .map((iUser) => (
+              <li key={iUser.id}>
+                <button
+                  value={iUser.id}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const value = e.currentTarget.value;
+                    console.log("click", value);
+                    setSelectedUsers((prev) => [...prev, iUser]);
+                    setSearchUsername("");
+                  }}
+                >
+                  {iUser.username}
+                </button>
+              </li>
             ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
+      </ul>
+    </div>
   );
 }

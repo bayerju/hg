@@ -13,15 +13,18 @@ import {
 import { api } from "~/trpc/react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { ComboboxMulti } from "./combobox_multi";
+import { SearchUsers, SimpleUser } from "./combobox_multi";
 
 export function PaymentFrom() {
   const router = useRouter();
+  const utils = api.useUtils();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [payedBy, setPayedBy] = useState<string[]>([]);
+  const [payedBy, setPayedBy] = useState<SimpleUser[]>([]);
+  const [payedFor, setPayedFor] = useState<SimpleUser[]>([]);
   const createPayment = api.spending.create.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
+      await utils.spending.getAll.invalidate();
       router.push("/");
     },
     onError: (error) => {
@@ -36,7 +39,8 @@ export function PaymentFrom() {
         createPayment.mutate({
           name,
           price: Math.round(Number(price.replace(",", "."))) * 100,
-          // payedBy,
+          payedByIds: payedBy.map((user) => user.clerkId),
+          payedForIds: payedFor.map((user) => user.clerkId),
         });
       }}
     >
@@ -50,19 +54,16 @@ export function PaymentFrom() {
         value={price}
         onChange={(e) => setPrice(e.target.value)}
       />
-      <Input placeholder="Wer hat bezahlt?" />
-      <ComboboxMulti />
-      {/* <Select>
-        <SelectTrigger className=" relative w-32">
-          <SelectValue placeholder="Wer hat bezahlt?" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="Dirk">Dirk</SelectItem>
-          <SelectItem value="Jezabel und Julian">Jezabel und Julian</SelectItem>
-          <SelectItem value="Jezabel">Jezabel</SelectItem>
-          <SelectItem value="Julian">Julian</SelectItem>
-        </SelectContent>
-      </Select> */}
+      <SearchUsers
+        placeholder={"Wer hat bezahlt"}
+        selectedUsers={payedBy}
+        setSelectedUsers={setPayedBy}
+      />
+      <SearchUsers
+        placeholder={"Für wen wurde bezahlt"}
+        selectedUsers={payedFor}
+        setSelectedUsers={setPayedFor}
+      />
       <Button type="submit">Hinzufügen</Button>
     </form>
   );
