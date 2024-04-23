@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@clerk/clerk-sdk-node':
+    specifier: ^5.0.0
+    version: 5.0.0(react-dom@18.2.0)(react@18.2.0)
   '@clerk/nextjs':
     specifier: ^4.29.12
     version: 4.29.12(next@14.1.4)(react-dom@18.2.0)(react@18.2.0)
@@ -177,6 +180,19 @@ packages:
       - react
     dev: false
 
+  /@clerk/backend@1.0.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-3HRpSszaRPkIsZtO+es+8qCBLg/aI6JdivhKoDtK0MctxCFXL8pQ7+CdtKgFN2ooDB5gJDzqETGg03Fb7G+QZg==}
+    engines: {node: '>=18.17.0'}
+    dependencies:
+      '@clerk/shared': 2.0.0(react-dom@18.2.0)(react@18.2.0)
+      cookie: 0.5.0
+      snakecase-keys: 5.4.4
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - react
+      - react-dom
+    dev: false
+
   /@clerk/clerk-react@4.30.10(react@18.2.0):
     resolution: {integrity: sha512-c2X0grf7Vo6LrycvYbVyIyU7Gtyb47mf0/fnQdmF5zL8PIF1Ih5Yn9ZkbNeVjCLQrVRLeSRBgrrEIzlIenbuaQ==}
     engines: {node: '>=14'}
@@ -204,6 +220,18 @@ packages:
       tslib: 2.4.1
     transitivePeerDependencies:
       - react
+    dev: false
+
+  /@clerk/clerk-sdk-node@5.0.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-K8i4tY9KdJWfs+HUDPFfo8zuu8j/7MWkNiUh3q8mtMtge/cfiOeQVbYIjD42Oxn5Wbkp51o4DpWE3KEkkxpeVA==}
+    engines: {node: '>=18.17.0'}
+    dependencies:
+      '@clerk/backend': 1.0.0(react-dom@18.2.0)(react@18.2.0)
+      '@clerk/shared': 2.0.0(react-dom@18.2.0)(react@18.2.0)
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - react
+      - react-dom
     dev: false
 
   /@clerk/nextjs@4.29.12(next@14.1.4)(react-dom@18.2.0)(react@18.2.0):
@@ -237,6 +265,27 @@ packages:
       glob-to-regexp: 0.4.1
       js-cookie: 3.0.1
       react: 18.2.0
+      swr: 2.2.0(react@18.2.0)
+    dev: false
+
+  /@clerk/shared@2.0.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-HRbBGhAetOE6gSFd2jlLJTo+BFjuEr9lD1xigtBXdJUnmVngunciikQU2dZ4i/20X7B4VTrofhNpYi9MsCm7dw==}
+    engines: {node: '>=18.17.0'}
+    requiresBuild: true
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      glob-to-regexp: 0.4.1
+      js-cookie: 3.0.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      std-env: 3.7.0
       swr: 2.2.0(react@18.2.0)
     dev: false
 
@@ -4727,6 +4776,10 @@ packages:
   /split2@4.2.0:
     resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
     engines: {node: '>= 10.x'}
+
+  /std-env@3.7.0:
+    resolution: {integrity: sha512-JPbdCEQLj1w5GilpiHAx3qJvFndqybBysA3qUOnznweH4QbNYUsW/ea8QzSrnh0vNsezMMw5bcVool8lM0gwzg==}
+    dev: false
 
   /streamsearch@1.1.0:
     resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}

@@ -118,3 +118,37 @@ export const usersToSpendingsPayedRelations = relations(
   }),
 );
 
+export const clearing = createTable("clearing", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 256 }),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
+});
+
+export const clearingRelations = relations(clearing, ({ many }) => ({
+  users: many(clearingToUsers),
+}));
+
+export const clearingToUsers = createTable("clearing_to_user", {
+  clearingId: serial("clearing_id")
+    .notNull()
+    .references(() => clearing.id),
+  clerkId: varchar("clerk_id", { length: 256 }).references(() => users.clerkId),
+});
+
+export const clearingToUsersRelations = relations(
+  clearingToUsers,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [clearingToUsers.clerkId],
+      references: [users.clerkId],
+    }),
+    clearing: one(clearing, {
+      fields: [clearingToUsers.clearingId],
+      references: [clearing.id],
+    }),
+  }),
+);
+

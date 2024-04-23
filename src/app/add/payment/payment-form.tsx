@@ -13,7 +13,7 @@ import {
 import { api } from "~/trpc/react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { SearchUsers, SimpleUser } from "./combobox_multi";
+import { SearchUsers, SimpleUser } from "../combobox_multi";
 
 export function PaymentFrom() {
   const router = useRouter();

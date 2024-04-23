@@ -11,9 +11,9 @@ export default async function Home() {
     <main className="flex flex-col items-center ">
       <h1 className=" text-lg font-semibold">last payments</h1>
       <Payments />
-      <Link className=" absolute bottom-5 right-0 p-5 " href={"/addpayment"}>
+      {/* <Link className=" absolute bottom-5 right-0 p-5 " href={"/addpayment"}>
         <CirclePlus size={48} />
-      </Link>
+      </Link> */}
     </main>
   );
 }

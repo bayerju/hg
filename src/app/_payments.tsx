@@ -14,7 +14,7 @@ export function Payments() {
   const [selectedPayment, setSelectedPayment] = useState<number | null>(null);
   const [score, setScore] = useState<number | null>(null);
   useEffect(() => {
-    if (!payments.data) return;
+    if (!!!payments.data) return;
     const score = payments.data.reduce((acc, iPayment) => {
       return acc + calcAffect(iPayment);
     }, 0);
@@ -41,7 +41,7 @@ export function Payments() {
   };
 
   if (payments.isLoading) {
-    return <div className=" text-">Loading...</div>;
+    return <div className=" text-">Loading Payments...</div>;
   }
 
   return (
@@ -96,7 +96,7 @@ export function Payments() {
         })}
       </ul>
       <Separator />
-      {!score && <div>loading...</div>}
+      {!!!score && <div>loading...</div>}
       {score && (
         <div className={cn("flex w-full justify-end")}>
           score: <span className={listClassNames(score < 0)}>{score}</span>
