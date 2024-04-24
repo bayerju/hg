@@ -1,3 +1,4 @@
+import { Card } from "~/components/ui/card";
 import { api } from "~/trpc/server";
 
 export default async function Abrechnung() {
@@ -5,9 +6,9 @@ export default async function Abrechnung() {
   return (
     <div>
       Abrechnung
-      <div>
+      <div className="flex flex-col gap-3">
         {clearings.map((clearing) => {
-          return <div key={clearing.id}>{clearing.id}</div>;
+          return <Card key={clearing.id}>{clearing.name}</Card>;
         })}
       </div>
     </div>
