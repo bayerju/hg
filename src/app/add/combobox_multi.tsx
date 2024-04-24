@@ -20,6 +20,8 @@ import {
 import { api } from "~/trpc/react";
 import { Input } from "~/components/ui/input";
 import { Badge } from "~/components/ui/badge";
+import { z } from "zod";
+import { SimpleUserSchema } from "~/types/simple_user";
 
 const frameworks = [
   {
@@ -43,11 +45,8 @@ const frameworks = [
     label: "Astro",
   },
 ];
-export interface SimpleUser {
-  username: string;
-  id: number;
-  clerkId: string;
-}
+
+export type SimpleUser = z.infer<typeof SimpleUserSchema>;
 
 export function SearchUsers(props: {
   placeholder: string;

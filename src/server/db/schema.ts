@@ -118,7 +118,7 @@ export const usersToSpendingsPayedRelations = relations(
   }),
 );
 
-export const clearing = createTable("clearing", {
+export const clearings = createTable("clearing", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
   createdAt: timestamp("created_at")
@@ -127,15 +127,17 @@ export const clearing = createTable("clearing", {
   updatedAt: timestamp("updatedAt"),
 });
 
-export const clearingRelations = relations(clearing, ({ many }) => ({
+export const clearingRelations = relations(clearings, ({ many }) => ({
   users: many(clearingToUsers),
 }));
 
 export const clearingToUsers = createTable("clearing_to_user", {
   clearingId: serial("clearing_id")
     .notNull()
-    .references(() => clearing.id),
-  clerkId: varchar("clerk_id", { length: 256 }).references(() => users.clerkId),
+    .references(() => clearings.id),
+  clerkId: varchar("clerk_id", { length: 256 })
+    .references(() => users.clerkId)
+    .notNull(),
 });
 
 export const clearingToUsersRelations = relations(
@@ -145,9 +147,9 @@ export const clearingToUsersRelations = relations(
       fields: [clearingToUsers.clerkId],
       references: [users.clerkId],
     }),
-    clearing: one(clearing, {
+    clearing: one(clearings, {
       fields: [clearingToUsers.clearingId],
-      references: [clearing.id],
+      references: [clearings.id],
     }),
   }),
 );
